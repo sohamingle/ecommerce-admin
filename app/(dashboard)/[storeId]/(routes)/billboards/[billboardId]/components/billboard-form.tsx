@@ -1,13 +1,11 @@
 "use client"
 
 import AlerModal from "@/components/modals/alert-modal";
-import { CldUploadWidget } from 'next-cloudinary';
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import useOrigin from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Billboard } from "@prisma/client";
 import axios from "axios";
@@ -38,7 +36,6 @@ const BillboardForm:React.FC<Props> = ({initialData}) => {
 
     const params = useParams()
     const router = useRouter()
-    const origin = useOrigin()
 
     const form = useForm<BillboardFormValues>({
         resolver:zodResolver(formSchema),
@@ -56,10 +53,14 @@ const BillboardForm:React.FC<Props> = ({initialData}) => {
     const onSubmit = async(data:BillboardFormValues)=>{
         setLoading(true)
         try{
-            await axios.patch(`/api/stores/${params.storeId}`,data)
+            if(initialData){
+                await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`,data)
+            }else{
+                await axios.post(`/api/${params.storeId}/billboards`,data)
+            }
             router.refresh()
-            router.push('/')
-            toast.success("Store Updated")
+            router.push(`/${params.storeId}/billboards`)
+            toast.success(toastMessage)
         }catch(err){
             toast.error("Something went wrong")
         }finally{
@@ -70,11 +71,11 @@ const BillboardForm:React.FC<Props> = ({initialData}) => {
     const onDelete = async() =>{
         try{
             setLoading(true)
-            await axios.delete(`/api/stores/${params.storeId}`)
-            toast.success("Successfully deleted")
+            await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`)
+            toast.success('Successfully Removed')
             router.refresh()
         }catch(err){
-            toast.error("Make sure you remove all the products and categories first")
+            toast.error("Make sure you remove all categories first")
             console.log(err)
         }finally{
             setOpen(false)
