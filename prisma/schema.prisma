@@ -1,4 +1,4 @@
- // This is your Prisma schema file,
+// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -10,21 +10,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Store{
-  id String @id @default(uuid())
-  name String
-  userId String
+model Store {
+  id         String      @id @default(uuid())
+  name       String
+  userId     String
   billboards Billboard[] @relation("StoreToBillboard")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  categories Category[]  @relation("StoreToCategory")
+  sizes      Size[]      @relation("StoreToSize")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
-model Billboard{
-  id String @id @default(uuid())
-  storeId String
-  store Store @relation("StoreToBillboard",fields: [storeId],references: [id])
-  label String
-  imageUrl String
+model Billboard {
+  id        String     @id @default(uuid())
+  storeId   String
+  store     Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
+  catgories Category[]
+  label     String
+  imageUrl  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([storeId])
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  storeId     String
+  store       Store     @relation("StoreToCategory", fields: [storeId], references: [id])
+  billboardId String
+  billboard   Billboard @relation(fields: [billboardId], references: [id])
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+  @@index([billboardId])
+}
+
+model Size {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation("StoreToSize", fields: [storeId], references: [id])
+  name      String
+  value     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
