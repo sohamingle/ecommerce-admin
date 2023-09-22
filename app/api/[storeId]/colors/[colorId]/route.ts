@@ -4,24 +4,24 @@ import { NextResponse } from "next/server";
 
 
 
-export async function GET(req:Request,{params}:{params:{storeId:string,categoryId:string}}){
+export async function GET(req:Request,{params}:{params:{storeId:string,colorId:string}}){
     try {
 
         if(!params.storeId){
             return new NextResponse('Store ID is required',{status:400})
         }
-        if(!params.categoryId){
+        if(!params.colorId){
             return new NextResponse("StoreId is required", {status:400})
         }
 
-        const category = await prismadb.category.findUnique({
+        const color = await prismadb.color.findUnique({
             where:{
-                id: params.categoryId,
+                id: params.colorId,
                 storeId: params.storeId
             }
         })
 
-        return NextResponse.json(category)
+        return NextResponse.json(color)
 
     } catch (error) {
         console.log(error)
@@ -31,25 +31,25 @@ export async function GET(req:Request,{params}:{params:{storeId:string,categoryI
 
 
 
-export async function PATCH(req:Request,{params}:{params:{storeId:string,categoryId:string}}){
+export async function PATCH(req:Request,{params}:{params:{storeId:string,colorId:string}}){
     try {
         const {userId} = auth()
         const body =await req.json()
         if(!userId){
             return new NextResponse("User not found", {status:401})
         }
-        const {name,billboardId} = body
+        const {name,value} = body
         if(!name){
             return new NextResponse("Name is required", {status:400})
         }
-        if(!billboardId){
+        if(!value){
             return new NextResponse("Billboard is required", {status:400})
         }
         if(!params.storeId){
             return new NextResponse("StoreId is required", {status:400})
         }
-        if(!params.categoryId){
-            return new NextResponse("Category is required", {status:400})
+        if(!params.colorId){
+            return new NextResponse("Color is required", {status:400})
         }
         const storeByUserId = await prismadb.store.findFirst({
             where:{
@@ -62,17 +62,17 @@ export async function PATCH(req:Request,{params}:{params:{storeId:string,categor
             return new NextResponse("Store not found", {status:403})
         }
 
-        const category = await prismadb.category.updateMany({
+        const color = await prismadb.color.updateMany({
             where:{
-                id:params.categoryId,
+                id:params.colorId,
                 storeId: params.storeId,
             },
             data:{
-                name,billboardId
+                name,value
             }
         })
 
-        return NextResponse.json(category,{status:200})
+        return NextResponse.json(color,{status:200})
 
     } catch (error) {
         console.log(error)
@@ -80,7 +80,7 @@ export async function PATCH(req:Request,{params}:{params:{storeId:string,categor
     }
 }
 
-export async function DELETE(req:Request,{params}:{params:{storeId:string,categoryId:string}}){
+export async function DELETE(req:Request,{params}:{params:{storeId:string,colorId:string}}){
     try {
         const {userId} = auth()
 
@@ -91,7 +91,7 @@ export async function DELETE(req:Request,{params}:{params:{storeId:string,catego
         if(!params.storeId){
             return new NextResponse('Store ID is required',{status:400})
         }
-        if(!params.categoryId){
+        if(!params.colorId){
             return new NextResponse("Category is required", {status:400})
         }
         const storeByUserId = await prismadb.store.findFirst({
@@ -105,14 +105,14 @@ export async function DELETE(req:Request,{params}:{params:{storeId:string,catego
             return new NextResponse("Store not found", {status:403})
         }
 
-        const category = await prismadb.category.deleteMany({
+        const color = await prismadb.color.deleteMany({
             where:{
-                id: params.categoryId,
+                id: params.colorId,
                 storeId: params.storeId
             }
         })
 
-        return NextResponse.json(category,{status:200})
+        return NextResponse.json(color,{status:200})
 
     } catch (error) {
         console.log(error)

@@ -9,12 +9,12 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
         if(!userId){
             return new NextResponse("User not found", {status:401})
         }
-        const {name,billboardId} = body
+        const {name,value} = body
         if(!name){
             return new NextResponse("Name is required", {status:400})
         }
-        if(!billboardId){
-            return new NextResponse("Billboard is required", {status:400})
+        if(!value){
+            return new NextResponse("Value is required", {status:400})
         }
         if(!params.storeId){
             return new NextResponse("StoreId is required", {status:400})
@@ -31,10 +31,10 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
             return new NextResponse("Store not found", {status:403})
         }
 
-        const category = await prismadb.category.create({data:{name,billboardId,storeId:params.storeId}})
-        return NextResponse.json(category,{status:201})
+        const size = await prismadb.size.create({data:{name,value,storeId:params.storeId}})
+        return NextResponse.json(size,{status:201})
     }catch(err){
-        console.log('Billboard Post',err)
+        console.log('Size Post',err)
         return new NextResponse('Internal Error',{status:500})
     }
 }
@@ -43,14 +43,14 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
 
 export async function GET(req: Request ,{params}:{params:{storeId:string}}){
     try{
-        const categories = await prismadb.category.findMany({
+        const sizes = await prismadb.size.findMany({
             where:{
                 storeId:params.storeId
             }
         })
-        return NextResponse.json(categories,{status:200})
+        return NextResponse.json(sizes,{status:200})
     }catch(err){
-        console.log('Category Post',err)
+        console.log('Size Post',err)
         return new NextResponse('Internal Error',{status:500})
     }
 }

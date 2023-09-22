@@ -1,7 +1,7 @@
 "use client";
 
 import { AlignJustifyIcon, CopyCheckIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { BillboardColumn } from "./column";
+import { ProductColumn } from "./column";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import AlerModal from "@/components/modals/alert-modal";
 import { useState } from "react";
 
 interface Props {
-  data: BillboardColumn;
+  data: ProductColumn;
 }
 
 const CellAction: React.FC<Props> = ({ data }) => {
@@ -35,13 +35,13 @@ const CellAction: React.FC<Props> = ({ data }) => {
     }
 
     const onEdit = () =>{
-        router.push(`/${params.storeId}/billboards/${data.id}`)
+        router.push(`/${params.storeId}/products/${data.id}`)
     }
 
     const onDelete = async() =>{
         try{
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/billboards/${data.id}`)
+            await axios.delete(`/api/${params.storeId}/products/${data.id}`)
             toast.success('Successfully Removed')
             router.refresh()
         }catch(err){
@@ -60,7 +60,7 @@ const CellAction: React.FC<Props> = ({ data }) => {
     <DropdownMenu>
       <DropdownMenuTrigger><AlignJustifyIcon className="h-4 w-4"/></DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{data.label}</DropdownMenuLabel>
+        <DropdownMenuLabel>{data.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onCopy} className="cursor-pointer"><CopyCheckIcon className="h-4 w-4 mr-2"/>Copy ID</DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit} className="cursor-pointer"><PencilIcon className="h-4 w-4 mr-2"/>Edit</DropdownMenuItem>

@@ -9,12 +9,33 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
         if(!userId){
             return new NextResponse("User not found", {status:401})
         }
-        const {name,billboardId} = body
+        const {
+            name,
+            images,
+            price,
+            categoryId,
+            sizeId,
+            colorId,
+            isFeatured,
+            isArchived
+        } = body
         if(!name){
             return new NextResponse("Name is required", {status:400})
         }
-        if(!billboardId){
-            return new NextResponse("Billboard is required", {status:400})
+        if(!price){
+            return new NextResponse("Price is required", {status:400})
+        }
+        if(!categoryId){
+            return new NextResponse("Category is required", {status:400})
+        }
+        if(!colorId){
+            return new NextResponse("Color is required", {status:400})
+        }
+        if(!sizeId){
+            return new NextResponse("SIze is required", {status:400})
+        }
+        if(!images || !images.length){
+            return new NextResponse("Images are required", {status:400})
         }
         if(!params.storeId){
             return new NextResponse("StoreId is required", {status:400})
@@ -31,10 +52,26 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
             return new NextResponse("Store not found", {status:403})
         }
 
-        const category = await prismadb.category.create({data:{name,billboardId,storeId:params.storeId}})
-        return NextResponse.json(category,{status:201})
+        const product = await prismadb.product.create({data:{
+            name,
+            price,
+            colorId,
+            categoryId,
+            sizeId,
+            isFeatured,
+            isArchived,
+            storeId:params.storeId,
+            images:{
+                createMany:{
+                    data:[
+                        ...images.map((image:{url:string})=>image)
+                    ]
+                }
+            },
+        }})
+        return NextResponse.json(product,{status:201})
     }catch(err){
-        console.log('Billboard Post',err)
+        console.log('Product Post',err)
         return new NextResponse('Internal Error',{status:500})
     }
 }
@@ -43,14 +80,34 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
 
 export async function GET(req: Request ,{params}:{params:{storeId:string}}){
     try{
-        const categories = await prismadb.category.findMany({
+
+        const {searchParams} = new URL(req.url)
+        const categoryId = searchParams.get("categoryId") || undefined
+        const colorId = searchParams.get("colorId") || undefined
+        const sizeId = searchParams.get("sizeId") || undefined
+        const isFeatured = searchParams.get("isFeatured")
+
+        const product = await prismadb.product.findMany({
             where:{
-                storeId:params.storeId
+                storeId:params.storeId,
+                categoryId,
+                colorId,
+                sizeId,
+                isFeatured: isFeatured ? true : undefined
+            },
+            include:{
+                images: true,
+                category:true,
+                color:true,
+                size:true,
+            },
+            orderBy:{
+                createdAt: "desc"
             }
         })
-        return NextResponse.json(categories,{status:200})
+        return NextResponse.json(product,{status:200})
     }catch(err){
-        console.log('Category Post',err)
+        console.log('Product Post',err)
         return new NextResponse('Internal Error',{status:500})
     }
 }
