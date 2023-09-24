@@ -38,8 +38,11 @@ export async function PATCH(req:Request,{params}:{params:{storeId:string,billboa
         if(!userId){
             return new NextResponse("User not found", {status:401})
         }
-        const {label,imageUrl} = body
+        const {label,labelColor,imageUrl} = body
         if(!label){
+            return new NextResponse("Label is required", {status:400})
+        }
+        if(!labelColor){
             return new NextResponse("Label is required", {status:400})
         }
         if(!imageUrl){
@@ -68,7 +71,7 @@ export async function PATCH(req:Request,{params}:{params:{storeId:string,billboa
                 storeId: params.storeId,
             },
             data:{
-                label,imageUrl
+                label,imageUrl,labelColor
             }
         })
 

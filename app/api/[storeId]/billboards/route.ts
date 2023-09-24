@@ -9,8 +9,11 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
         if(!userId){
             return new NextResponse("User not found", {status:401})
         }
-        const {label,imageUrl} = body
+        const {label,labelColor,imageUrl} = body
         if(!label){
+            return new NextResponse("Label is required", {status:400})
+        }
+        if(!labelColor){
             return new NextResponse("Label is required", {status:400})
         }
         if(!imageUrl){
@@ -31,7 +34,7 @@ export async function POST(req: Request ,{params}:{params:{storeId:string}}){
             return new NextResponse("Store not found", {status:403})
         }
 
-        const billboard = await prismadb.billboard.create({data:{label,imageUrl,storeId:params.storeId}})
+        const billboard = await prismadb.billboard.create({data:{label,imageUrl,labelColor,storeId:params.storeId}})
         return NextResponse.json(billboard,{status:201})
     }catch(err){
         console.log('Billboard Post',err)

@@ -17,7 +17,7 @@ const OrderClient:React.FC<Props> = ({data}) => {
     const router = useRouter()
     const params = useParams()
 
-    const title = `Products (${data.length})`
+    const title = `Orders (${data.length})`
 
     return (
         <>

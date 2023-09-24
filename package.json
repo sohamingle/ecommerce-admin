@@ -29,17 +29,22 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
     "lucide-react": "^0.279.0",
     "next": "^13.5.2",
     "next-cloudinary": "^4.22.0",
+    "next-themes": "^0.2.1",
     "postcss": "8.4.29",
+    "razorpay": "^2.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
     "react-hot-toast": "^2.4.1",
+    "recharts": "^2.8.0",
+    "shortid": "^2.2.16",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
@@ -48,6 +53,8 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.14",
+    "@types/shortid": "^0.0.29",
     "prisma": "^5.3.1"
   }
 }

@@ -19,6 +19,7 @@ import ImageUpload from "./image-upload";
 
 const formSchema = z.object({
     label: z.string().min(3),
+    labelColor: z.string().min(1),
     imageUrl : z.string().min(1)
 })
 
@@ -117,6 +118,20 @@ const BillboardForm:React.FC<Props> = ({initialData}) => {
                         <FormLabel>Billboard Label</FormLabel>
                         <FormControl>
                            <Input  placeholder="Billboard Name"
+                           disabled={loading} {...field} />
+                        </FormControl>
+                        <FormMessage/>
+                        </FormItem>
+                     )}
+                     />
+                    <FormField
+                     control={form.control}
+                     name="labelColor"
+                     render={({field})=>(
+                        <FormItem>
+                        <FormLabel>Label Color</FormLabel>
+                        <FormControl>
+                           <Input  placeholder="Text Color"
                            disabled={loading} {...field} />
                         </FormControl>
                         <FormMessage/>
