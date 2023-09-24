@@ -5,7 +5,7 @@ import prismadb from "@/lib/prismadb";
 import shortid from "shortid";
 
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "http://localhost:3001",
+    "Access-Control-Allow-Origin": "https://ecommerce-store-xi-rust.vercel.app/",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
     "Access-Control-Allow-Headers": "Content-Type,Authorization"
 }
